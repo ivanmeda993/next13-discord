@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { FileUpload } from "@/components/FileUpload";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 interface IInitialModel {}
 
 const formSchema = z.object({
@@ -40,6 +42,8 @@ const formSchema = z.object({
 export default function InitialModel({}: IInitialModel) {
   const [isMounted, setIsMounted] = useState(false);
 
+  const router = useRouter();
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -56,6 +60,16 @@ export default function InitialModel({}: IInitialModel) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+
+    try {
+      await axios.post("/api/servers", values);
+
+      form.reset();
+
+      router.refresh();
+
+      window.location.reload();
+    } catch (e) {}
   };
 
   if (!isMounted) {
@@ -121,7 +135,7 @@ export default function InitialModel({}: IInitialModel) {
               />
             </div>
             <DialogFooter className="px-6 py-4 bg-gray-100">
-              <Button variant="primary" disabled={isLoading}>
+              <Button variant="primary" disabled={isLoading} type="submit">
                 Create
               </Button>
             </DialogFooter>
