@@ -1,3 +1,11 @@
+import { UserButton } from "@clerk/nextjs";
+import { ModeToggle } from "@/components/mode-toggle";
+
 export default function Home() {
-  return <main className="bg-blue-400 h-full">page</main>;
+  return (
+    <div>
+      <UserButton />
+      <ModeToggle />
+    </div>
+  );
 }
