@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { FileUpload } from "@/components/FileUpload";
 interface IInitialModel {}
 
 const formSchema = z.object({
@@ -77,7 +78,22 @@ export default function InitialModel({}: IInitialModel) {
             <div className="space-y-8 px-6">
               <div className="flex items-center justify-center text-center">
                 {/*  TODO image upload*/}
-                Image upload
+                <FormField
+                  name="imageUrl"
+                  control={form.control}
+                  render={({ field, formState }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FileUpload
+                          endpoint="serverImage"
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
               <FormField
                 name="name"
