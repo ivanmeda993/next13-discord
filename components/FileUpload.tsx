@@ -51,7 +51,7 @@ export const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
       </div>
     );
   }
-
+  // TODO disable button when uploading with loading state
   return (
     <UploadDropzone
       endpoint={endpoint}

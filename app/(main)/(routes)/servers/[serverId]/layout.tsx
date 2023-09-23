@@ -31,6 +31,9 @@ const ServerIdLayout = async ({
     },
   });
 
+  console.log("Server", server);
+  console.log("Profile", profile);
+
   if (!server) {
     return redirect("/");
   }
