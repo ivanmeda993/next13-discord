@@ -2,11 +2,11 @@
 
 import {
   Dialog,
-  DialogTitle,
-  DialogHeader,
-  DialogDescription,
   DialogContent,
+  DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { FileUpload } from "@/components/FileUpload";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+
 interface IInitialModel {}
 
 const formSchema = z.object({
@@ -59,8 +60,6 @@ export default function InitialModel({}: IInitialModel) {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-
     try {
       await axios.post("/api/servers", values);
 

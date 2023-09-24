@@ -16,6 +16,22 @@ export const initialProfile = async () => {
   });
 
   if (profile) {
+    if (
+      profile.name !== `${user.firstName} ${user.lastName}` ||
+      profile.imageUrl !== user.imageUrl ||
+      profile.email !== user.emailAddresses[0].emailAddress
+    ) {
+      await db.profile.update({
+        where: {
+          id: profile.id,
+        },
+        data: {
+          name: `${user.firstName} ${user.lastName}`,
+          imageUrl: user.imageUrl,
+          email: user.emailAddresses[0].emailAddress,
+        },
+      });
+    }
     return profile;
   }
 

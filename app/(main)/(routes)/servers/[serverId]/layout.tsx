@@ -1,9 +1,8 @@
-import NavigationSidebar from "@/components/navigation/navigation-sidebar";
 import { currentProfile } from "@/lib/current-profile";
 import { redirectToSignIn } from "@clerk/nextjs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import ServerSidebar from "@/components/server/server-sidebar";
+import { ServerSidebar } from "@/components/server/server-sidebar";
 
 const ServerIdLayout = async ({
   children,
@@ -30,9 +29,6 @@ const ServerIdLayout = async ({
       },
     },
   });
-
-  console.log("Server", server);
-  console.log("Profile", profile);
 
   if (!server) {
     return redirect("/");

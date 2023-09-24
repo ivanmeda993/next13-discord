@@ -18,7 +18,6 @@ import {
   Loader2,
   MoreVertical,
   Shield,
-  ShieldAlert,
   ShieldCheck,
   ShieldQuestion,
 } from "lucide-react";
@@ -38,12 +37,8 @@ import { MemberRole } from "@prisma/client";
 import axios from "axios";
 import qs from "query-string";
 import { useRouter } from "next/navigation";
+import { roleIconMap } from "@/lib/role-icon";
 
-const roleIconMap = {
-  GUEST: null,
-  MODERATOR: <ShieldCheck className="w-4 h-4 ml-2 text-indigo-500" />,
-  ADMIN: <ShieldAlert className="w-4 h-4 ml-2 text-rose-500" />,
-};
 export const MembersModal = () => {
   const router = useRouter();
   const { isOpen, onClose, type, data, onOpen } = useModal();
