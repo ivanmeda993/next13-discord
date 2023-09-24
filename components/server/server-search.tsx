@@ -29,7 +29,6 @@ export const ServerSearch = ({ data }: IServerSearch) => {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      console.log(e.key, e.metaKey, e.ctrlKey);
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
@@ -85,7 +84,7 @@ export const ServerSearch = ({ data }: IServerSearch) => {
                 return (
                   <CommandItem key={id} onSelect={() => onClick({ id, type })}>
                     {icon}
-                    <span>{name}</span>
+                    <span className="ml-2">{name}</span>
                   </CommandItem>
                 );
               })}
