@@ -18,8 +18,6 @@ export const ServerChannel = ({ server, channel, role }: IServerChannel) => {
   const params = useParams();
   const router = useRouter();
 
-  const Icon = channelIconMap[channel.type];
-
   const onClick = () => {
     router.push(`/servers/${params?.serverId}/channels/${channel.id}`);
   };
@@ -30,7 +28,10 @@ export const ServerChannel = ({ server, channel, role }: IServerChannel) => {
   };
 
   return (
-    <button className="group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-2">
+    <button
+      onClick={onClick}
+      className="group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-2"
+    >
       {channelIconMap[channel.type]}
       <p
         className={cn(
