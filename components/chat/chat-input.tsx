@@ -37,7 +37,12 @@ export const ChatInput = ({ apiUrl, type, query, name }: IChatInput) => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      const url = qs.stringifyUrl({
+        url: apiUrl,
+        query,
+      });
       console.log(values);
+      await axios.post(url, values);
     } catch (error) {
       console.error(error);
     }
