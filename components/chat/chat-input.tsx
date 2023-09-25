@@ -41,10 +41,13 @@ export const ChatInput = ({ apiUrl, type, query, name }: IChatInput) => {
         url: apiUrl,
         query,
       });
-      console.log(values);
+
       await axios.post(url, values);
+
+      form.reset();
+      router.refresh();
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 

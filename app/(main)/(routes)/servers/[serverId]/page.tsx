@@ -36,8 +36,6 @@ const ServerPage = async ({ params }: IServerPage) => {
     },
   });
 
-  console.log("SERVER", server);
-
   const initialChannel = server?.channels[0];
 
   if (initialChannel?.name !== "general") {
