@@ -1,14 +1,18 @@
-import { currentProfile } from "@/lib/current-profile";
 import { redirectToSignIn } from "@clerk/nextjs";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
-interface IServerPage {
+import { currentProfile } from "@/lib/current-profile";
+import { db } from "@/lib/db";
+
+interface ServerIdPageProps {
   params: {
     serverId: string;
-  };
-}
-const ServerPage = async ({ params }: IServerPage) => {
+  }
+};
+
+const ServerIdPage = async ({
+  params
+}: ServerIdPageProps) => {
   const profile = await currentProfile();
 
   if (!profile) {
@@ -21,20 +25,20 @@ const ServerPage = async ({ params }: IServerPage) => {
       members: {
         some: {
           profileId: profile.id,
-        },
-      },
+        }
+      }
     },
     include: {
       channels: {
         where: {
-          name: "general",
+          name: "general"
         },
         orderBy: {
-          createdAt: "asc",
-        },
-      },
-    },
-  });
+          createdAt: "asc"
+        }
+      }
+    }
+  })
 
   const initialChannel = server?.channels[0];
 
@@ -42,7 +46,7 @@ const ServerPage = async ({ params }: IServerPage) => {
     return null;
   }
 
-  return redirect(`/servers/${params.serverId}/channels/${initialChannel.id}`);
-};
-
-export default ServerPage;
+  return redirect(`/servers/${params.serverId}/channels/${initialChannel?.id}`)
+}
+ 
+export default ServerIdPage;

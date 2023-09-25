@@ -8,13 +8,14 @@ interface InviteCodePageProps {
   params: {
     inviteCode: string;
   };
-}
+};
 
-const InviteCodePage = async ({ params }: InviteCodePageProps) => {
+const InviteCodePage = async ({
+  params
+}: InviteCodePageProps) => {
   const profile = await currentProfile();
 
   if (!profile) {
-    // return redirect("/sign-in");
     return redirectToSignIn();
   }
 
@@ -27,10 +28,10 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
       inviteCode: params.inviteCode,
       members: {
         some: {
-          profileId: profile.id,
-        },
-      },
-    },
+          profileId: profile.id
+        }
+      }
+    }
   });
 
   if (existingServer) {
@@ -46,17 +47,17 @@ const InviteCodePage = async ({ params }: InviteCodePageProps) => {
         create: [
           {
             profileId: profile.id,
-          },
-        ],
-      },
-    },
+          }
+        ]
+      }
+    }
   });
 
   if (server) {
     return redirect(`/servers/${server.id}`);
   }
-
+  
   return null;
-};
-
+}
+ 
 export default InviteCodePage;

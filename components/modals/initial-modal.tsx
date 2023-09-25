@@ -1,5 +1,11 @@
 "use client";
 
+import axios from "axios";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+
 import {
   Dialog,
   DialogContent,
@@ -8,9 +14,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -21,26 +24,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { FileUpload } from "@/components/FileUpload";
-import axios from "axios";
+import { FileUpload } from "@/components/file-upload";
 import { useRouter } from "next/navigation";
-
-interface IInitialModel {}
 
 const formSchema = z.object({
   name: z.string().min(1, {
-    message: "Server name is required",
+    message: "Server name is required.",
   }),
-  imageUrl: z
-    .string()
-    .min(1, {
-      message: "Server image is required",
-    })
-    .url(),
+  imageUrl: z.string().min(1, {
+    message: "Server image is required.",
+  }),
 });
 
-export default function InitialModel({}: IInitialModel) {
+export const InitialModal = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter();
@@ -64,25 +60,26 @@ export default function InitialModel({}: IInitialModel) {
       await axios.post("/api/servers", values);
 
       form.reset();
-
       router.refresh();
-
       window.location.reload();
-    } catch (e) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!isMounted) {
     return null;
   }
+
   return (
     <Dialog open>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center">
+          <DialogTitle className="text-2xl text-center font-bold">
             Customize your server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Give your new server a personality with a name and an icon. You can
+            Give your server a personality with a name and an image. You can
             always change it later.
           </DialogDescription>
         </DialogHeader>
@@ -90,11 +87,10 @@ export default function InitialModel({}: IInitialModel) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-8 px-6">
               <div className="flex items-center justify-center text-center">
-                {/*  TODO image upload*/}
                 <FormField
-                  name="imageUrl"
                   control={form.control}
-                  render={({ field, formState }) => (
+                  name="imageUrl"
+                  render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <FileUpload
@@ -103,29 +99,25 @@ export default function InitialModel({}: IInitialModel) {
                           onChange={field.onChange}
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+
               <FormField
-                name="name"
                 control={form.control}
-                render={({ field, formState }) => (
+                name="name"
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel
-                      className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70"
-                      htmlFor={field.name}
-                    >
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
                       Server name
                     </FormLabel>
-                    <FormControl placeholder="Enter a server name">
+                    <FormControl>
                       <Input
-                        {...field}
-                        id={field.name}
-                        placeholder="Enter a server name"
-                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
                         disabled={isLoading}
+                        className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                        placeholder="Enter server name"
+                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -133,8 +125,8 @@ export default function InitialModel({}: IInitialModel) {
                 )}
               />
             </div>
-            <DialogFooter className="px-6 py-4 bg-gray-100">
-              <Button variant="primary" disabled={isLoading} type="submit">
+            <DialogFooter className="bg-gray-100 px-6 py-4">
+              <Button variant="primary" disabled={isLoading}>
                 Create
               </Button>
             </DialogFooter>
@@ -143,4 +135,4 @@ export default function InitialModel({}: IInitialModel) {
       </DialogContent>
     </Dialog>
   );
-}
+};

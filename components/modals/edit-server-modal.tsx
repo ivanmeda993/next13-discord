@@ -4,6 +4,7 @@ import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 import {
   Dialog,
@@ -23,10 +24,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { FileUpload } from "@/components/file-upload";
 import { useRouter } from "next/navigation";
-import { useModal } from "@/hooks/store/use-modal-store";
-import { FileUpload } from "@/components/FileUpload";
-import { useEffect } from "react";
+import { useModal } from "@/hooks/use-modal-store";
 
 const formSchema = z.object({
   name: z.string().min(1, {
@@ -38,15 +38,11 @@ const formSchema = z.object({
 });
 
 export const EditServerModal = () => {
-  const {
-    isOpen,
-    onClose,
-    type,
-    data: { server },
-  } = useModal();
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
 
   const isModalOpen = isOpen && type === "editServer";
+  const { server } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -61,7 +57,7 @@ export const EditServerModal = () => {
       form.setValue("name", server.name);
       form.setValue("imageUrl", server.imageUrl);
     }
-  }, [form, server]);
+  }, [server, form]);
 
   const isLoading = form.formState.isSubmitting;
 

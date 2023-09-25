@@ -1,5 +1,6 @@
 "use client";
 
+import qs from "query-string";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,9 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useModal } from "@/hooks/use-modal-store";
 import { Button } from "@/components/ui/button";
-import { useModal } from "@/hooks/store/use-modal-store";
-import qs from "query-string";
 
 export const DeleteChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -27,13 +27,13 @@ export const DeleteChannelModal = () => {
 
   const onClick = async () => {
     try {
+      setIsLoading(true);
       const url = qs.stringifyUrl({
         url: `/api/channels/${channel?.id}`,
         query: {
           serverId: server?.id,
         },
       });
-      setIsLoading(true);
 
       await axios.delete(url);
 

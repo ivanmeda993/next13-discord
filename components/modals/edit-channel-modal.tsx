@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 import {
   Select,
   SelectContent,
@@ -33,7 +34,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect } from "react";
-import { useModal } from "@/hooks/store/use-modal-store";
 
 const formSchema = z.object({
   name: z
@@ -52,7 +52,7 @@ export const EditChannelModal = () => {
   const router = useRouter();
 
   const isModalOpen = isOpen && type === "editChannel";
-  const { server, channel } = data;
+  const { channel, server } = data;
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -67,7 +67,7 @@ export const EditChannelModal = () => {
       form.setValue("name", channel.name);
       form.setValue("type", channel.type);
     }
-  }, [channel, form]);
+  }, [form, channel]);
 
   const isLoading = form.formState.isSubmitting;
 
@@ -99,7 +99,7 @@ export const EditChannelModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Create Channel
+            Edit Channel
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -160,7 +160,7 @@ export const EditChannelModal = () => {
             </div>
             <DialogFooter className="bg-gray-100 px-6 py-4">
               <Button variant="primary" disabled={isLoading}>
-                Update
+                Save
               </Button>
             </DialogFooter>
           </form>

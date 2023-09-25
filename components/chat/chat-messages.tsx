@@ -1,20 +1,20 @@
 "use client";
 
-import { Fragment, useRef, ElementRef } from "react";
+import { ElementRef, Fragment, useRef } from "react";
 import { format } from "date-fns";
 import { Member, Message, Profile } from "@prisma/client";
 import { Loader2, ServerCrash } from "lucide-react";
 
 import { useChatQuery } from "@/hooks/use-chat-query";
-
-import { ChatWelcome } from "./chat-welcome";
-import { ChatItem } from "@/components/chat/chat-item";
 import { useChatSocket } from "@/hooks/use-chat-socket";
 import { useChatScroll } from "@/hooks/use-chat-scroll";
 
+import { ChatWelcome } from "./chat-welcome";
+import { ChatItem } from "./chat-item";
+
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
-export type MessageWithMemberWithProfile = Message & {
+type MessageWithMemberWithProfile = Message & {
   member: Member & {
     profile: Profile;
   };
@@ -57,14 +57,13 @@ export const ChatMessages = ({
       paramKey,
       paramValue,
     });
-
   useChatSocket({ queryKey, addKey, updateKey });
   useChatScroll({
     chatRef,
     bottomRef,
     loadMore: fetchNextPage,
     shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
-    count: data?.pages?.[0]?.items?.length || 0,
+    count: data?.pages?.[0]?.items?.length ?? 0,
   });
 
   if (status === "loading") {
@@ -89,7 +88,6 @@ export const ChatMessages = ({
     );
   }
 
-  console.log("DATA", data);
   return (
     <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
       {!hasNextPage && <div className="flex-1" />}
@@ -109,7 +107,7 @@ export const ChatMessages = ({
         </div>
       )}
       <div className="flex flex-col-reverse mt-auto">
-        {data?.pages.map((group, i) => (
+        {data?.pages?.map((group, i) => (
           <Fragment key={i}>
             {group.items.map((message: MessageWithMemberWithProfile) => (
               <ChatItem

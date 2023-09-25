@@ -14,14 +14,6 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!name) {
-      return new NextResponse("Name is required", { status: 400 });
-    }
-
-    if (!imageUrl) {
-      return new NextResponse("Image URL is required", { status: 400 });
-    }
-
     const server = await db.server.create({
       data: {
         profileId: profile.id,
@@ -29,12 +21,16 @@ export async function POST(req: Request) {
         imageUrl,
         inviteCode: uuidv4(),
         channels: {
-          create: [{ name: "general", profileId: profile.id }],
+          create: [
+            { name: "general", profileId: profile.id }
+          ]
         },
         members: {
-          create: [{ profileId: profile.id, role: MemberRole.ADMIN }],
-        },
-      },
+          create: [
+            { profileId: profile.id, role: MemberRole.ADMIN }
+          ]
+        }
+      }
     });
 
     return NextResponse.json(server);

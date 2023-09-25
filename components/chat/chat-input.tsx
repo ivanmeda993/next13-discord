@@ -5,25 +5,26 @@ import axios from "axios";
 import qs from "query-string";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useModal } from "@/hooks/store/use-modal-store";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useModal } from "@/hooks/use-modal-store";
 import { EmojiPicker } from "@/components/emoji-picker";
 
-interface IChatInput {
+interface ChatInputProps {
   apiUrl: string;
   query: Record<string, any>;
   name: string;
-  type: "channel" | "conversation";
+  type: "conversation" | "channel";
 }
 
 const formSchema = z.object({
   content: z.string().min(1),
 });
-export const ChatInput = ({ apiUrl, type, query, name }: IChatInput) => {
+
+export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
   const { onOpen } = useModal();
   const router = useRouter();
 
@@ -33,6 +34,7 @@ export const ChatInput = ({ apiUrl, type, query, name }: IChatInput) => {
       content: "",
     },
   });
+
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {

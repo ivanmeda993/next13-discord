@@ -1,5 +1,9 @@
 "use client";
 
+import axios from "axios";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import {
   Dialog,
   DialogContent,
@@ -8,12 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-import { useModal } from "@/hooks/store/use-modal-store";
+import { useModal } from "@/hooks/use-modal-store";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 
 export const LeaveServerModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -24,7 +24,7 @@ export const LeaveServerModal = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const onConfirm = async () => {
+  const onClick = async () => {
     try {
       setIsLoading(true);
 
@@ -33,8 +33,8 @@ export const LeaveServerModal = () => {
       onClose();
       router.refresh();
       router.push("/");
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -45,10 +45,10 @@ export const LeaveServerModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Leave server
+            Leave Server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Are you sure you want to leave
+            Are you sure you want to leave{" "}
             <span className="font-semibold text-indigo-500">
               {server?.name}
             </span>
@@ -57,10 +57,10 @@ export const LeaveServerModal = () => {
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
           <div className="flex items-center justify-between w-full">
-            <Button disabled={isLoading} variant="ghost" onClick={onClose}>
+            <Button disabled={isLoading} onClick={onClose} variant="ghost">
               Cancel
             </Button>
-            <Button disabled={isLoading} variant="primary" onClick={onConfirm}>
+            <Button disabled={isLoading} variant="primary" onClick={onClick}>
               Confirm
             </Button>
           </div>

@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
+import { useModal } from "@/hooks/use-modal-store";
 import {
   Select,
   SelectContent,
@@ -33,7 +34,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useEffect } from "react";
-import { useModal } from "@/hooks/store/use-modal-store";
 
 const formSchema = z.object({
   name: z

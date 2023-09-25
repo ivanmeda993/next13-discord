@@ -1,42 +1,44 @@
-import { currentProfile } from "@/lib/current-profile";
 import { redirectToSignIn } from "@clerk/nextjs";
-import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { getOrCreateConversation } from "@/lib/conversation";
-import { ChatHeader } from "@/components/chat/chat-header";
 
-interface IMemberIdPageProps {
+import { db } from "@/lib/db";
+import { getOrCreateConversation } from "@/lib/conversation";
+import { currentProfile } from "@/lib/current-profile";
+import { ChatHeader } from "@/components/chat/chat-header";
+import { ChatMessages } from "@/components/chat/chat-messages";
+import { ChatInput } from "@/components/chat/chat-input";
+
+interface MemberIdPageProps {
   params: {
-    serverId: string;
     memberId: string;
-  };
+    serverId: string;
+  }
 }
-const MemberIdPage = async ({ params }: IMemberIdPageProps) => {
+
+const MemberIdPage = async ({
+  params
+}: MemberIdPageProps) => {
   const profile = await currentProfile();
-  const { memberId, serverId } = params;
 
   if (!profile) {
     return redirectToSignIn();
   }
 
-  const loggedUser = await db.member.findFirst({
+  const currentMember = await db.member.findFirst({
     where: {
-      profileId: profile.id,
       serverId: params.serverId,
+      profileId: profile.id,
     },
     include: {
       profile: true,
     },
   });
 
-  if (!loggedUser) {
+  if (!currentMember) {
     return redirect("/");
   }
 
-  const conversation = await getOrCreateConversation(
-    loggedUser.id,
-    params.memberId,
-  );
+  const conversation = await getOrCreateConversation(currentMember.id, params.memberId);
 
   if (!conversation) {
     return redirect(`/servers/${params.serverId}`);
@@ -44,19 +46,39 @@ const MemberIdPage = async ({ params }: IMemberIdPageProps) => {
 
   const { memberOne, memberTwo } = conversation;
 
-  const otherMember =
-    memberOne.profileId === loggedUser.id ? memberOne : memberTwo;
+  const otherMember = memberOne.profileId === profile.id ? memberTwo : memberOne;
 
-  return (
-    <div className="bg-white dark:bg-[#313338] h-full flex flex-col">
+  return ( 
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <ChatHeader
-        serverId={serverId}
+        imageUrl={otherMember.profile.imageUrl}
+        name={otherMember.profile.name}
+        serverId={params.serverId}
+        type="conversation"
+      />
+      <ChatMessages
+        member={currentMember}
+        name={otherMember.profile.name}
+        chatId={conversation.id}
+        type="conversation"
+        apiUrl="/api/direct-messages"
+        paramKey="conversationId"
+        paramValue={conversation.id}
+        socketUrl="/api/socket/direct-messages"
+        socketQuery={{
+          conversationId: conversation.id,
+        }}
+      />
+      <ChatInput
         name={otherMember.profile.name}
         type="conversation"
-        imageUrl={otherMember.profile.imageUrl}
+        apiUrl="/api/socket/direct-messages"
+        query={{
+          conversationId: conversation.id,
+        }}
       />
     </div>
-  );
-};
-
+   );
+}
+ 
 export default MemberIdPage;

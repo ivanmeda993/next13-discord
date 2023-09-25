@@ -12,8 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useModal } from "@/hooks/use-modal-store";
 import { Button } from "@/components/ui/button";
-import { useModal } from "@/hooks/store/use-modal-store";
 
 export const DeleteServerModal = () => {
   const { isOpen, onClose, type, data } = useModal();
